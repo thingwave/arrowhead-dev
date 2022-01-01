@@ -1,5 +1,4 @@
 /********************************************************************************
-os.Exit(-1)
  * Copyright (c) 2021 ThingWave AB
  *
  * This program and the accompanying materials are made available under the
@@ -73,6 +72,7 @@ func main() {
 	caCertPool.AppendCertsFromPEM(caCert)
 
 	tlsConfig := &tls.Config{
+    InsecureSkipVerify: false,
 		Certificates: []tls.Certificate{cert},
 		RootCAs:      caCertPool,
 	}
@@ -80,7 +80,6 @@ func main() {
 	transport := &http.Transport{TLSClientConfig: tlsConfig}
 	client := &http.Client{Transport: transport}
 
-  fmt.Println("URI:", flag.Args()[0])
   uri := flag.Args()[0]
   data, statusCode, err := getRequest(client, uri)
 
@@ -91,5 +90,6 @@ func main() {
     fmt.Printf("Response code: %v\n", int(statusCode))
 	  fmt.Printf("Response data:\n%s\n", string(data))
   }
+
   os.Exit(0)
 }
