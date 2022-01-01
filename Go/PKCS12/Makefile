@@ -1,8 +1,8 @@
-
+SRC=lcclient.go
 
 all:
-	go build main.go
+	go build $(SRC)
 
 clean:
-	\rm -f main
+	\rm -f lcclient
 
