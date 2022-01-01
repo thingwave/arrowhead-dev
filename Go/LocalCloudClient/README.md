@@ -1,5 +1,5 @@
 # Eclipse Arrowhead Local Cloud Test Client
-This mini project contains a Golang based HTTP(S) client that performs a GET request to the submitted URI. This can for example be used to test the availability of Eclipse Arrowhead Core systems, or and a software base for developing more complete Eclipse Arrowhead systems and clients.
+This utility aplication is a Golang based HTTP(S) client that performs a GET request to the submitted URI. This can for example be used to test the availability of Eclipse Arrowhead Core systems, or as a software base for developing more complete Eclipse Arrowhead systems and clients.
 
 This tool can be used together the Eclipse Arrowhead [Reference implementation](https://www.github.com/eclipse-arrowhead/core-java-spring).
 Note that this tool currently only supports insecure mode with HTTP, or secure mode with HTTPS using PEM-based certificates.
