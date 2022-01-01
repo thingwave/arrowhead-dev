@@ -2,6 +2,7 @@
 This folder shows how to use PKCS#12 certificates in Golang with Eclipse Arrowhead.
 This mini project contains a Golang based HTTPS client that performs a GET request to the submitted URI. This can for example be used to test the availability of Eclipse Arrowhead Core systems, or and a software base for developing more complete Eclipse Arrowhead systems and clients.
 
+This tool can be used for the Eclipse Arrowhead [Reference implementation](https://www.github.com/eclipse-arrowhead/).
 
 ### To build the project
 To compile, run:
