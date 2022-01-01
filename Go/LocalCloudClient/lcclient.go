@@ -42,6 +42,25 @@ func getRequest(client *http.Client, uri string) ([]byte, int, error) {
 	return data, resp.StatusCode, nil
 }
 
+func loadPEMCertificates(cloudfile string, certfile string, keyfile string) (tls.Certificate, *x509.CertPool, error) {
+
+	// load client certificate
+	cert, err := tls.LoadX509KeyPair(certfile, keyfile)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// load local cloud CA certificate
+	caCert, err := ioutil.ReadFile(cloudfile)
+	if err != nil {
+		log.Fatal(err)
+	}
+	caCertPool := x509.NewCertPool()
+	caCertPool.AppendCertsFromPEM(caCert)
+
+	return cert, caCertPool, nil
+}
+
 func main() {
 	fmt.Println("Eclipse Arrowhead Local cloud HTTPS client tool\nCopyright 2022 ThingWave AB")
 
@@ -55,19 +74,7 @@ func main() {
 		os.Exit(-1)
 	}
 
-	// load client certificate
-	cert, err := tls.LoadX509KeyPair(*certFile, *keyFile)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// load local cloud CA certificate
-	caCert, err := ioutil.ReadFile(*cloudCaFile)
-	if err != nil {
-		log.Fatal(err)
-	}
-	caCertPool := x509.NewCertPool()
-	caCertPool.AppendCertsFromPEM(caCert)
+	cert, caCertPool, err := loadPEMCertificates(*cloudCaFile, *certFile, *keyFile)
 
 	// create TLS config
 	tlsConfig := &tls.Config{
