@@ -1,8 +1,9 @@
-SRC=lcclient.go
+APP=lcclient
+SRC=${APP}.go
 
 all:
 	go build $(SRC)
 
 clean:
-	\rm -f lcclient
+	\rm -f ${APP}
 

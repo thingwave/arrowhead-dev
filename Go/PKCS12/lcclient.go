@@ -1,4 +1,5 @@
 /********************************************************************************
+os.Exit(-1)
  * Copyright (c) 2021 ThingWave AB
  *
  * This program and the accompanying materials are made available under the
@@ -10,7 +11,7 @@
 package main
 
 import (
-  //"errors"
+  "os"
   "fmt"
 	"crypto/tls"
 	"crypto/x509"
@@ -27,45 +28,43 @@ var (
 	help = flag.Bool("help", false, "To display a help text.")
 )
 
+
 func getRequest(client *http.Client, uri string) ([]byte, int, error) {
-  //resp, err := client.Get("https://127.0.0.1:8443/serviceregistry/echo")
   resp, err := client.Get(uri)
 	if err != nil {
-		//log.Fatal(err)
     return nil, -1, err
 	}
 	defer resp.Body.Close()
 
-	// Dump response
 	data, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		//log.Fatal(err)
     return nil, -1, err
 	}
 
   return data, resp.StatusCode, nil
 }
 
+
 func main() {
-  fmt.Println("Eclipse Arrowhead PKCS #12 certificate example\nⒸ ThingWave AB")
+  fmt.Println("Eclipse Arrowhead Local cloud HTTPS client tool\nⒸ ThingWave AB")
 
   flag.Parse()
-  if *certFile == "" || *keyFile == "" || *cloudCaFile == "" {
-    fmt.Printf("Missing arguments!\nUse --help to print help")
-  }
-
   if *help == true {
-
-    return
+    fmt.Println("Usage example:\nlcclient --cloud=./certificates/testcloud2.pem --cert=./certificates/serviceregistry.pem --key=./certificates/serviceregistry.key <uri>")
+    os.Exit(0)
+  }
+  if *certFile == "" || *keyFile == "" || *cloudCaFile == "" {
+    fmt.Println("Missing arguments!\nUse --help to print help\n")
+    os.Exit(-1)
   }
 
-	// Load client cert
+	// load client certificate
 	cert, err := tls.LoadX509KeyPair(*certFile, *keyFile)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	// Load CA cert
+	// load local cloud CA certificate
 	caCert, err := ioutil.ReadFile(*cloudCaFile)
 	if err != nil {
 		log.Fatal(err)
@@ -73,7 +72,6 @@ func main() {
 	caCertPool := x509.NewCertPool()
 	caCertPool.AppendCertsFromPEM(caCert)
 
-	// Setup HTTPS client
 	tlsConfig := &tls.Config{
 		Certificates: []tls.Certificate{cert},
 		RootCAs:      caCertPool,
@@ -87,9 +85,11 @@ func main() {
   data, statusCode, err := getRequest(client, uri)
 
   if err != nil {
-    fmt.Printf("Couldn't connect!\n")
+    fmt.Printf("Couldn't connect to %s!\n", uri)
+    os.Exit(1)
   } else {
     fmt.Printf("Response code: %v\n", int(statusCode))
 	  fmt.Printf("Response data:\n%s\n", string(data))
   }
+  os.Exit(0)
 }
