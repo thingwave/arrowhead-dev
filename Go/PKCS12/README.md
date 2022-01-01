@@ -1,5 +1,4 @@
 # Eclipse Arrowhead Local Cloud Test Client
-This folder shows how to use PKCS#12 certificates in Golang with Eclipse Arrowhead.
 This mini project contains a Golang based HTTPS client that performs a GET request to the submitted URI. This can for example be used to test the availability of Eclipse Arrowhead Core systems, or and a software base for developing more complete Eclipse Arrowhead systems and clients.
 
 This tool can be used together the Eclipse Arrowhead [Reference implementation](https://www.github.com/eclipse-arrowhead/core-java-spring).
@@ -18,7 +17,8 @@ To run:
 ```
 
 ## Future work
-1. HTTP only (no certificates)
-2. PKCS #12 certificates
-3. More integrated features to interact with the Service registry, Orchestation and Authorization systems
+1. HTTP only (no certificates).
+2. PKCS #12 certificates.
+3. JSON and Eclipse Arrowhead 4.4.0 data models.
+4. More integrated features to interact with the Service registry, Orchestration, and Authorization systems.
 
