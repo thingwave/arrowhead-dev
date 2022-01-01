@@ -15,7 +15,6 @@ import (
 	"flag"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"os"
 )
@@ -44,17 +43,16 @@ func getRequest(client *http.Client, uri string) ([]byte, int, error) {
 }
 
 func loadPEMCertificates(cloudfile string, certfile string, keyfile string) (tls.Certificate, *x509.CertPool, error) {
-
 	// load client certificate
 	cert, err := tls.LoadX509KeyPair(certfile, keyfile)
 	if err != nil {
-		log.Fatal(err)
+		return tls.Certificate{}, nil, err
 	}
 
 	// load local cloud CA certificate
 	caCert, err := ioutil.ReadFile(cloudfile)
 	if err != nil {
-		log.Fatal(err)
+		return cert, nil, err
 	}
 	caCertPool := x509.NewCertPool()
 	caCertPool.AppendCertsFromPEM(caCert)
