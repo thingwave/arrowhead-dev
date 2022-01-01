@@ -92,8 +92,6 @@ func main() {
 		tlsConfig.BuildNameToCertificate()
 		transport := &http.Transport{TLSClientConfig: tlsConfig}
 		client = &http.Client{Transport: transport}
-	} else {
-
 	}
 
 	// perform a GET request
