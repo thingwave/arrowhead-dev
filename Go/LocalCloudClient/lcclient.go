@@ -17,6 +17,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+	//senml "github.com/thingwave/senml-go"
 )
 
 var (
@@ -25,6 +26,7 @@ var (
 	cloudCaFile = flag.String("cloud", "", "A PEM encoced Local cloud CA certificate file.")
 	insecure    = flag.Bool("insecure", false, "To disable TLS.")
 	help        = flag.Bool("help", false, "To display a help text.")
+	op          = flag.String("op", "", "Execute a command to an Eclipse Arrowhead Core system.")
 )
 
 func getRequest(client *http.Client, uri string) ([]byte, int, error) {
@@ -41,6 +43,10 @@ func getRequest(client *http.Client, uri string) ([]byte, int, error) {
 
 	return data, resp.StatusCode, nil
 }
+
+//func postRequest(client *http.Client, uri string, payload string) ([]byte, int, error) {
+
+//}
 
 func loadPEMCertificates(cloudfile string, certfile string, keyfile string) (tls.Certificate, *x509.CertPool, error) {
 	// load client certificate
@@ -61,6 +67,8 @@ func loadPEMCertificates(cloudfile string, certfile string, keyfile string) (tls
 }
 
 func main() {
+	//var msg senml.SenMLMessage
+	//fmt.Printf("SenML for the DataManager %v\n", msg)
 	client := &http.Client{}
 	fmt.Println("Eclipse Arrowhead Local cloud HTTPS client tool\nCopyright 2022 ThingWave AB")
 
@@ -92,9 +100,19 @@ func main() {
 		client = &http.Client{Transport: transport}
 	}
 
-	// perform a GET request
+	// perform the request
 	uri := flag.Args()[0]
-	data, statusCode, err := getRequest(client, uri)
+	var data []byte = nil
+	var statusCode int
+	var err error
+	if *op == "" {
+		data, statusCode, err = getRequest(client, uri)
+	} else if *op == "listServices" {
+		//data, statusCode, err = postRequest(client, uri, "")
+	} else {
+		fmt.Printf("Illegal operation, aborting...\n")
+		os.Exit(-1)
+	}
 
 	// print response
 	if err != nil {
