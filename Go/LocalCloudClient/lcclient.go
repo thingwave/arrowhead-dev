@@ -67,8 +67,6 @@ func loadPEMCertificates(cloudfile string, certfile string, keyfile string) (tls
 }
 
 func main() {
-	//var msg senml.SenMLMessage
-	//fmt.Printf("SenML for the DataManager %v\n", msg)
 	client := &http.Client{}
 	fmt.Println("Eclipse Arrowhead Local cloud HTTPS client tool\nCopyright 2022 ThingWave AB")
 
