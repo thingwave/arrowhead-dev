@@ -74,7 +74,7 @@ func main() {
 
 	flag.Parse()
 	if *help == true {
-		fmt.Println("Usage example:\nlcclient --cloud=./certificates/testcloud2.pem --cert=./certificates/serviceregistry.pem --key=./certificates/serviceregistry.key <uri>")
+		fmt.Println("Usage example:\nlcclient --cloud=../../certificates/testcloud2.pem --cert=../../certificates/serviceregistry.pem --key=../../certificates/serviceregistry.key <uri>")
 		os.Exit(0)
 	}
 	if *insecure == false && (*certFile == "" || *keyFile == "" || *cloudCaFile == "") {
