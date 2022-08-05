@@ -24,6 +24,7 @@ var (
 	certFile    = flag.String("cert", "", "A PEM encoded System certificate file.")
 	keyFile     = flag.String("key", "", "A PEM encoded System private key file.")
 	cloudCaFile = flag.String("cloud", "", "A PEM encoced Local cloud CA certificate file.")
+	uri         = flag.String("uri", "", "URI to call")
 	insecure    = flag.Bool("insecure", false, "To disable TLS.")
 	help        = flag.Bool("help", false, "To display a help text.")
 	op          = flag.String("op", "", "Execute a command to an Eclipse Arrowhead Core system.")
@@ -99,14 +100,14 @@ func main() {
 	}
 
 	// perform the request
-	uri := flag.Args()[0]
+	//uri := flag.Args()[0]
 	var data []byte = nil
 	var statusCode int
 	var err error
 	if *op == "" {
-		data, statusCode, err = getRequest(client, uri)
+		data, statusCode, err = getRequest(client, *uri)
 	} else if *op == "listServices" {
-		//data, statusCode, err = postRequest(client, uri, "")
+		//data, statusCode, err = postRequest(client, *uri, "")
 	} else {
 		fmt.Printf("Illegal operation, aborting...\n")
 		os.Exit(-1)
@@ -114,7 +115,7 @@ func main() {
 
 	// print response
 	if err != nil {
-		fmt.Printf("Couldn't connect to %s!\n", uri)
+		fmt.Printf("Couldn't connect to '%s'\n", *uri)
 		os.Exit(1)
 	} else {
 		fmt.Printf("Response code: %v\n", int(statusCode))
