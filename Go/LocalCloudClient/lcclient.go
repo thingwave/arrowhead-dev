@@ -30,19 +30,23 @@ var (
 	op          = flag.String("op", "", "Execute a command to an Eclipse Arrowhead Core system.")
 )
 
-func getRequest(client *http.Client, uri string) ([]byte, int, error) {
+func getRequest(client *http.Client, uri string) ([]byte, int, string, error) {
 	resp, err := client.Get(uri)
 	if err != nil {
-		return nil, -1, err
+		return nil, -1, "", err
 	}
 	defer resp.Body.Close()
 
 	data, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return nil, -1, err
+		return nil, -1, "", err
 	}
 
-	return data, resp.StatusCode, nil
+    contentType := ""
+    if len(resp.Header.Get("Content-Type")) > 0 {
+        contentType = string(resp.Header.Get("Content-Type"))
+    }
+	return data, resp.StatusCode, contentType, nil
 }
 
 //func postRequest(client *http.Client, uri string, payload string) ([]byte, int, error) {
@@ -67,13 +71,14 @@ func loadPEMCertificates(cloudfile string, certfile string, keyfile string) (tls
 	return cert, caCertPool, nil
 }
 
+
 func main() {
 	client := &http.Client{}
-	fmt.Println("Eclipse Arrowhead Local cloud HTTPS client tool\nCopyright 2022 ThingWave AB")
+	fmt.Println("Eclipse Arrowhead Local cloud HTTP(S) client tool\nCopyright 2022 ThingWave AB")
 
 	flag.Parse()
 	if *help == true {
-		fmt.Println("Usage example:\nlcclient --cloud=../../certificates/testcloud2.pem --cert=../../certificates/serviceregistry.pem --key=../../certificates/serviceregistry.key <uri>")
+		fmt.Println("Usage example:\nlcclient --cloud=../../certificates/testcloud2.pem --cert=../../certificates/serviceregistry.pem --key=../../certificates/serviceregistry.key --uri=<uri>")
 		os.Exit(0)
 	}
 	if *insecure == false && (*certFile == "" || *keyFile == "" || *cloudCaFile == "") {
@@ -103,9 +108,10 @@ func main() {
 	//uri := flag.Args()[0]
 	var data []byte = nil
 	var statusCode int
+    var contentType string
 	var err error
 	if *op == "" {
-		data, statusCode, err = getRequest(client, *uri)
+		data, statusCode, contentType, err = getRequest(client, *uri)
 	} else if *op == "listServices" {
 		//data, statusCode, err = postRequest(client, *uri, "")
 	} else {
@@ -119,6 +125,9 @@ func main() {
 		os.Exit(1)
 	} else {
 		fmt.Printf("Response code: %v\n", int(statusCode))
+        if contentType != "" {
+    		fmt.Printf("Response content-type: %s\n", contentType)
+        }
 		fmt.Printf("Response data:\n%s\n", string(data))
 		os.Exit(0)
 	}
