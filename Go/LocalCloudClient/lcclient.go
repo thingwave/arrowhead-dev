@@ -42,7 +42,7 @@ func getRequest(client *http.Client, uri string) ([]byte, int, string, error) {
 		return nil, -1, "", err
 	}
 
-    contentType := ""
+    var contentType string = ""
     if len(resp.Header.Get("Content-Type")) > 0 {
         contentType = string(resp.Header.Get("Content-Type"))
     }
